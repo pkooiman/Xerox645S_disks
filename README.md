@@ -9,4 +9,4 @@ Inspired by @TechTangents videos:
 Disk images are available on archive.org:
 https://archive.org/details/xerox-memory-writer-645-640-base-0
 
-See the .ksy files fro details on the disk format.
+See the .ksy files for details on the disk format.
