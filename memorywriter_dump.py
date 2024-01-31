@@ -84,7 +84,11 @@ def DumpDisk(imagefilepath):
     stream = kaitaistruct.KaitaiStream(open(imagefilepath, 'rb'))
     for e in directory.direntries:
         filedata = ReadFile(stream, e.firstfilesector.offset)
-        with open(f'{output_directory}/{e.name}', 'wb') as f:
+        if not e.name:
+            fname = '__empty__'
+        else:
+            fname = e.name
+        with open(f'{output_directory}/{fname}', 'wb') as f:
             f.write(filedata)
     
     
