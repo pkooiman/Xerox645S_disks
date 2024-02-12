@@ -1,0 +1,39 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__memorywriter_file {
+		
+		graph[style=dotted];
+
+		
+		subgraph cluster__sectorheader_struct {
+			label="MemorywriterFile::SectorheaderStruct";
+			graph[style=dotted];
+
+			sectorheader_struct__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="prevsector_pos">0</TD><TD PORT="prevsector_size">2</TD><TD>MemorywriterSectoraddress</TD><TD PORT="prevsector_type">prevsector</TD></TR>
+				<TR><TD PORT="nextsector_pos">2</TD><TD PORT="nextsector_size">2</TD><TD>MemorywriterSectoraddress</TD><TD PORT="nextsector_type">nextsector</TD></TR>
+				<TR><TD PORT="datasize_pos">4</TD><TD PORT="datasize_size">1</TD><TD>u1</TD><TD PORT="datasize_type">datasize</TD></TR>
+				<TR><TD PORT="fileid_pos">5</TD><TD PORT="fileid_size">1</TD><TD>u1</TD><TD PORT="fileid_type">fileid</TD></TR>
+				<TR><TD PORT="unknown_pos">6</TD><TD PORT="unknown_size">1</TD><TD>u1</TD><TD PORT="unknown_type">unknown</TD></TR>
+				<TR><TD COLSPAN="4" PORT="unknown__repeat">repeat 2 times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__sector {
+			label="MemorywriterFile::Sector";
+			graph[style=dotted];
+
+			sector__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">8</TD><TD>SectorheaderStruct</TD><TD PORT="header_type">header</TD></TR>
+				<TR><TD PORT="data_pos">8</TD><TD PORT="data_size">1</TD><TD>u1</TD><TD PORT="data_type">data</TD></TR>
+				<TR><TD COLSPAN="4" PORT="data__repeat">repeat header.datasize times</TD></TR>
+			</TABLE>>];
+		}
+		
+	}
+	
+	sector__seq:header_type -> sectorheader_struct__seq [style=bold];
+	
+}

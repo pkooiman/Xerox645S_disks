@@ -1,0 +1,21 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__memorywriter_sectoraddress {
+		label="MemorywriterSectoraddress";
+		graph[style=dotted];
+
+		memorywriter_sectoraddress__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="track_pos">0</TD><TD PORT="track_size">1</TD><TD>u1</TD><TD PORT="track_type">track</TD></TR>
+			<TR><TD PORT="sector_pos">1</TD><TD PORT="sector_size">1</TD><TD>u1</TD><TD PORT="sector_type">sector</TD></TR>
+		</TABLE>>];
+		memorywriter_sectoraddress__inst__offset [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>offset</TD><TD>(sector == 0 ? 0 : (256 * ((track * 16) + (sector - 1))))</TD></TR>
+		</TABLE>>];
+	}
+	memorywriter_sectoraddress__seq:sector_type -> memorywriter_sectoraddress__inst__offset [color="#404040"];
+	memorywriter_sectoraddress__seq:track_type -> memorywriter_sectoraddress__inst__offset [color="#404040"];
+	memorywriter_sectoraddress__seq:sector_type -> memorywriter_sectoraddress__inst__offset [color="#404040"];
+}

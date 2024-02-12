@@ -1,0 +1,31 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__memorywriter_directory {
+		label="MemorywriterDirectory";
+		graph[style=dotted];
+
+		memorywriter_directory__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="direntries_pos">0</TD><TD PORT="direntries_size">19</TD><TD>DirectoryEntry</TD><TD PORT="direntries_type">direntries</TD></TR>
+			<TR><TD COLSPAN="4" PORT="direntries__repeat">repeat to end of stream</TD></TR>
+		</TABLE>>];
+		subgraph cluster__directory_entry {
+			label="MemorywriterDirectory::DirectoryEntry";
+			graph[style=dotted];
+
+			directory_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="fileid_pos">0</TD><TD PORT="fileid_size">1</TD><TD>u1</TD><TD PORT="fileid_type">fileid</TD></TR>
+				<TR><TD PORT="name_pos">1</TD><TD PORT="name_size">10</TD><TD>str(UTF-8)</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD PORT="numsectors_pos">11</TD><TD PORT="numsectors_size">2</TD><TD>u2le</TD><TD PORT="numsectors_type">numsectors</TD></TR>
+				<TR><TD PORT="firstfilesector_pos">13</TD><TD PORT="firstfilesector_size">2</TD><TD>MemorywriterSectoraddress</TD><TD PORT="firstfilesector_type">firstfilesector</TD></TR>
+				<TR><TD PORT="lastfilesector_pos">15</TD><TD PORT="lastfilesector_size">2</TD><TD>MemorywriterSectoraddress</TD><TD PORT="lastfilesector_type">lastfilesector</TD></TR>
+				<TR><TD PORT="unknown_pos">17</TD><TD PORT="unknown_size">1</TD><TD>u1</TD><TD PORT="unknown_type">unknown</TD></TR>
+				<TR><TD COLSPAN="4" PORT="unknown__repeat">repeat 2 times</TD></TR>
+			</TABLE>>];
+		}
+	}
+	memorywriter_directory__seq:direntries_type -> directory_entry__seq [style=bold];
+	
+}

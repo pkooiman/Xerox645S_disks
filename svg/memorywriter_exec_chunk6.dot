@@ -1,0 +1,17 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__load_chunk {
+		label="MemorywriterExec::LoadChunk";
+		graph[style=dotted];
+
+		load_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="unknown_pos">0</TD><TD PORT="unknown_size">1</TD><TD>u1</TD><TD PORT="unknown_type">unknown</TD></TR>
+			<TR><TD PORT="loadaddress_pos">1</TD><TD PORT="loadaddress_size">2</TD><TD>u2le</TD><TD PORT="loadaddress_type">loadaddress</TD></TR>
+			<TR><TD PORT="data_pos">3</TD><TD PORT="data_size">⇲</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+		</TABLE>>];
+	}
+}
+
+

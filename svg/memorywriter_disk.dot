@@ -1,0 +1,34 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__memorywriter_disk {
+		label="MemorywriterDisk";
+		graph[style=dotted];
+
+		
+		memorywriter_disk__inst__diskheader [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="diskheader_pos">((256 * 17) * 16)</TD><TD PORT="diskheader_size">256</TD><TD>DiskheaderStruct</TD><TD PORT="diskheader_type">diskheader</TD></TR>
+		</TABLE>>];
+		subgraph cluster__diskheader_struct {
+			label="MemorywriterDisk::DiskheaderStruct";
+			graph[style=dotted];
+
+			diskheader_struct__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="label_pos">0</TD><TD PORT="label_size">11</TD><TD>str(UTF-8)</TD><TD PORT="label_type">label</TD></TR>
+				<TR><TD PORT="firstdirsector_pos">11</TD><TD PORT="firstdirsector_size">2</TD><TD>MemorywriterSectoraddress</TD><TD PORT="firstdirsector_type">firstdirsector</TD></TR>
+				<TR><TD PORT="lastdirsector_pos">13</TD><TD PORT="lastdirsector_size">2</TD><TD>MemorywriterSectoraddress</TD><TD PORT="lastdirsector_type">lastdirsector</TD></TR>
+				<TR><TD PORT="unknown1_pos">15</TD><TD PORT="unknown1_size">1</TD><TD>u1</TD><TD PORT="unknown1_type">unknown1</TD></TR>
+				<TR><TD COLSPAN="4" PORT="unknown1__repeat">repeat 14 times</TD></TR>
+				<TR><TD PORT="sector_bitmap_pos">29</TD><TD PORT="sector_bitmap_size">1</TD><TD>u1</TD><TD PORT="sector_bitmap_type">sector_bitmap</TD></TR>
+				<TR><TD COLSPAN="4" PORT="sector_bitmap__repeat">repeat 80 times</TD></TR>
+				<TR><TD PORT="unknown2_pos">109</TD><TD PORT="unknown2_size">1</TD><TD>u1</TD><TD PORT="unknown2_type">unknown2</TD></TR>
+				<TR><TD COLSPAN="4" PORT="unknown2__repeat">repeat 147 times</TD></TR>
+			</TABLE>>];
+		}
+	}
+	memorywriter_disk__inst__diskheader:diskheader_type -> diskheader_struct__seq [style=bold];
+	
+	
+}

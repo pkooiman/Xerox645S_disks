@@ -1,0 +1,19 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	
+	subgraph cluster__chunk_header_t {
+		label="MemorywriterExec::ChunkHeaderT";
+		graph[style=dotted];
+
+		chunk_header_t__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="chunktype_pos">0</TD><TD PORT="chunktype_size">1</TD><TD>u1</TD><TD PORT="chunktype_type">chunktype</TD></TR>
+			<TR><TD PORT="chunksize_pos">1</TD><TD PORT="chunksize_size">2</TD><TD>u2le</TD><TD PORT="chunksize_type">chunksize</TD></TR>
+		</TABLE>>];
+	}
+
+		
+	
+	
+}
