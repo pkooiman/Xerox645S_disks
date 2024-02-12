@@ -41,6 +41,8 @@ def LoadExe(imagefilepath):
 
 
     for chunk in exe.chunks:
+        if (chunk.checksum + sum(chunk._raw_body) + chunk.header.chunktype + sum(chunk.header.chunksize.to_bytes(2, 'little'))) % 256 != 0:
+            print("Invalid checksum for chunk")
         if chunk.header.chunktype == 6:
             
             loadaddress = chunk.body.loadaddress
@@ -65,9 +67,9 @@ def LoadExe(imagefilepath):
     with open(chunklistname, 'wt') as f:
         for chunk in exe.chunks:
             if chunk.header.chunktype == 6:
-                f.write(f'Loadable chunk, loaded at 0x{chunk.body.loadaddress:04x} - 0x{(chunk.body.loadaddress + len(chunk.body.data)):04x}\n')
+                f.write(f'Loadable chunk, checksum {chunk.checksum:02x}, loaded at 0x{chunk.body.loadaddress:04x} - 0x{(chunk.body.loadaddress + len(chunk.body.data)):04x}\n')
             else:
-                f.write(f'Chunk type 0x{chunk.header.chunktype:02x}, data {chunk.body.data.hex()}\n')
+                f.write(f'Chunk type 0x{chunk.header.chunktype:02x}, checksum {chunk.checksum:02x}, data {chunk.body.data.hex()}\n')
     
 
 

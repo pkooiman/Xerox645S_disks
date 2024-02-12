@@ -20,12 +20,14 @@ types:
       - id: header
         type: chunk_header_t
       - id: body
-        size: header.chunksize
+        size: header.chunksize - 1
         type:
           switch-on: header.chunktype
           cases:
             6: load_chunk
             _: unknown_chunk
+      - id: checksum
+        type: u1
       
             
   load_chunk:

@@ -55,7 +55,7 @@ The disk's directory is stored as a file (doubly linked list of sectors, see pre
 The directory entry for each file contains the file ID, file name, the number of sectors the file occupies and the addresses of the first and last sector in the file. The file ID stored in a directory entry corresponds with the file ID present in the corresponding file's sector headers.
 
 ### Executables
-Executable files are stored as a sequence of chunks, where each chunk starts with a 3-byte header specifying the chunk's type and size:
+Executable files are stored as a sequence of chunks, where each chunk starts with a 3-byte header specifying the chunk's type and size. The last byte in a chunk is the checksum, such that the sum of all chunk bytes including the header modulo 256 is 0.
 
 ![](svg/memorywriter_exec_chunkheader.svg)
 
@@ -63,4 +63,8 @@ Executable files are made up of chunks of type 6. Each chunk of type 6 contains 
 
 ![](svg/memorywriter_exec_chunk6.svg)
 
+The last chunk in an executable seems to be always of type 4, its exact meaning is unknown.
 
+The full structure of an executable file:
+
+![](svg/memorywriter_exec.svg)

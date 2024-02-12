@@ -1,0 +1,66 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__memorywriter_exec {
+		label="MemorywriterExec";
+		graph[style=dotted];
+
+		memorywriter_exec__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="chunks_pos">0</TD><TD PORT="chunks_size">...</TD><TD>ChunkT</TD><TD PORT="chunks_type">chunks</TD></TR>
+			<TR><TD COLSPAN="4" PORT="chunks__repeat">repeat to end of stream</TD></TR>
+		</TABLE>>];
+		subgraph cluster__chunk_header_t {
+			label="MemorywriterExec::ChunkHeaderT";
+			graph[style=dotted];
+
+			chunk_header_t__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="chunktype_pos">0</TD><TD PORT="chunktype_size">1</TD><TD>u1</TD><TD PORT="chunktype_type">chunktype</TD></TR>
+				<TR><TD PORT="chunksize_pos">1</TD><TD PORT="chunksize_size">2</TD><TD>u2le</TD><TD PORT="chunksize_type">chunksize</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__chunk_t {
+			label="MemorywriterExec::ChunkT";
+			graph[style=dotted];
+
+			chunk_t__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">3</TD><TD>ChunkHeaderT</TD><TD PORT="header_type">header</TD></TR>
+				<TR><TD PORT="body_pos">3</TD><TD PORT="body_size">...</TD><TD>switch (header.chunktype)</TD><TD PORT="body_type">body</TD></TR>
+				<TR><TD PORT="checksum_pos">...</TD><TD PORT="checksum_size">1</TD><TD>u1</TD><TD PORT="checksum_type">checksum</TD></TR>
+			</TABLE>>];
+chunk_t__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>6</TD><TD PORT="case0">LoadChunk</TD></TR>
+	<TR><TD>_</TD><TD PORT="case1">UnknownChunk</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__load_chunk {
+			label="MemorywriterExec::LoadChunk";
+			graph[style=dotted];
+
+			load_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="unknown_pos">0</TD><TD PORT="unknown_size">1</TD><TD>u1</TD><TD PORT="unknown_type">unknown</TD></TR>
+				<TR><TD PORT="loadaddress_pos">1</TD><TD PORT="loadaddress_size">2</TD><TD>u2le</TD><TD PORT="loadaddress_type">loadaddress</TD></TR>
+				<TR><TD PORT="data_pos">3</TD><TD PORT="data_size">⇲</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__unknown_chunk {
+			label="MemorywriterExec::UnknownChunk";
+			graph[style=dotted];
+
+			unknown_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="data_pos">0</TD><TD PORT="data_size">⇲</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+		}
+	}
+	memorywriter_exec__seq:chunks_type -> chunk_t__seq [style=bold];
+	chunk_t__seq:header_type -> chunk_header_t__seq [style=bold];
+	chunk_t__seq:body_type -> chunk_t__seq_body_switch [style=bold];
+	chunk_t__seq_body_switch:case0 -> load_chunk__seq [style=bold];
+	chunk_t__seq_body_switch:case1 -> unknown_chunk__seq [style=bold];
+	chunk_header_t__seq:chunktype_type -> chunk_t__seq:body_type [color="#404040"];
+}

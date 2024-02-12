@@ -45,13 +45,14 @@ class MemorywriterExec(KaitaiStruct):
             self.header = MemorywriterExec.ChunkHeaderT(self._io, self, self._root)
             _on = self.header.chunktype
             if _on == 6:
-                self._raw_body = self._io.read_bytes(self.header.chunksize)
+                self._raw_body = self._io.read_bytes((self.header.chunksize - 1))
                 _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
                 self.body = MemorywriterExec.LoadChunk(_io__raw_body, self, self._root)
             else:
-                self._raw_body = self._io.read_bytes(self.header.chunksize)
+                self._raw_body = self._io.read_bytes((self.header.chunksize - 1))
                 _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
                 self.body = MemorywriterExec.UnknownChunk(_io__raw_body, self, self._root)
+            self.checksum = self._io.read_u1()
 
 
     class LoadChunk(KaitaiStruct):
